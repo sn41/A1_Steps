@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

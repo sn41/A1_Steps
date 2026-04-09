@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,11 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.praya1.components.BottomBar
+import com.example.praya1.data.ProductData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Catalog(
-    changeScreen: (Int) -> Unit, products: List<Product>, function2: (Product) -> Unit
+fun CatalogScreen(
+    changeScreen: (Int) -> Unit, productData: List<ProductData>, function2: (ProductData) -> Unit
 ) {
     var searchState = rememberTextFieldState()
     Scaffold(topBar = {
@@ -48,7 +50,7 @@ fun Catalog(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            items(products.filter {
+            items(productData.filter {
                 it.name.contains(
                     searchState.text.toString(), ignoreCase = true
                 )

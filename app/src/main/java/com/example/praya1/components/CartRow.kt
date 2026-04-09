@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.praya1.data.CartData
+import com.example.praya1.data.ProductData
 
 @Composable
  fun CartRow(
-    item: CartItem, index: Int, function: (Product) -> Unit
+    item: CartData, index: Int, function: (ProductData) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.Companion.CenterVertically,
@@ -26,16 +28,16 @@ import androidx.compose.ui.unit.dp
             .height(50.dp)
     ) {
         Image(
-            painter = painterResource(item.product.images[0]), contentDescription = null
+            painter = painterResource(item.productData.images[0]), contentDescription = null
         )
         Column() {
             Text("товар${index}")
-            Text(item.product.price.toString())
+            Text(item.productData.price.toString())
         }
         Row(verticalAlignment = Alignment.Companion.CenterVertically) {
             Button(onClick = {
                 if (item.count.value == 1) {
-                    function(item.product)
+                    function(item.productData)
                 } else {
                     item.count.value--
                 }

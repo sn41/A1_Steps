@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -18,11 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.praya1.data.CartData
+import com.example.praya1.data.ProductData
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
- fun Details(
-    changeScreen: (Int) -> Unit, arg: Product, function2: (Product) -> Unit, cart: List<CartItem>
+ fun DetailsScreen(
+    changeScreen: (Int) -> Unit, arg: ProductData, function2: (ProductData) -> Unit, cart: List<CartData>
 ) {
     Scaffold(topBar = {
         TopAppBar(title = {
@@ -32,7 +34,7 @@ import androidx.compose.ui.unit.dp
         })
     }, bottomBar = {
         BottomAppBar {
-            val isIn = cart.find { it.product.name == arg.name } != null
+            val isIn = cart.find { it.productData.name == arg.name } != null
             Button(modifier = Modifier.Companion.fillMaxWidth(), onClick = {
                 if (!isIn) {
                     function2(arg)

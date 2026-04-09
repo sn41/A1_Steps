@@ -1,6 +1,6 @@
-package com.example.praya1
+package com.example.praya1.data
 
-data class Product(
+data class ProductData(
     val images: List<Int> = emptyList(),
     val name: String,
     val desc: String,

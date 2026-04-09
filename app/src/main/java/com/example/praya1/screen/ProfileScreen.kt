@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -15,10 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import com.example.praya1.Account
+import com.example.praya1.R
+import com.example.praya1.components.BottomBar
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun Profile(account: Account, changeScreen: (Int) -> Unit, function: () -> Unit) {
+fun ProfileScreen(account: Account, changeScreen: (Int) -> Unit, function: () -> Unit) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Профиль") }) },
         bottomBar = { BottomBar(changeScreen) }) {

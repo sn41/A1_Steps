@@ -1,4 +1,4 @@
-package com.example.praya1
+package com.example.praya1.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,20 +17,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.praya1.components.BottomBar
+import com.example.praya1.data.CartData
+import com.example.praya1.components.CartRow
+import com.example.praya1.data.ProductData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Cart(cart: List<CartItem>, changeScreen: (Int) -> Unit, function: (Product) -> Unit) {
+fun CartScreen(cart: List<CartData>, changeScreen: (Int) -> Unit, function: (ProductData) -> Unit) {
     Scaffold(topBar = {
         TopAppBar(title = { Text("Корзина") }, actions = {
             if (cart.isNotEmpty()) Button(onClick = {
                 cart.forEach {
-                    function(it.product)
+                    function(it.productData)
                 }
             }) { Text("X") }
         })
@@ -40,7 +46,7 @@ fun Cart(cart: List<CartItem>, changeScreen: (Int) -> Unit, function: (Product) 
                 .fillMaxSize()
                 .padding(it)
         ) {
-            if (cart.isEmpty()) {
+            if (cart.isEmpty())
                 Column(
                     modifier = Modifier.Companion.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -51,8 +57,7 @@ fun Cart(cart: List<CartItem>, changeScreen: (Int) -> Unit, function: (Product) 
                     Button(onClick = { changeScreen(2) }) {
                         Text("Перейти к каталогу")
                     }
-                }
-            } else {
+                } else
                 Column(
                     modifier = Modifier.Companion.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceAround
@@ -73,18 +78,17 @@ fun Cart(cart: List<CartItem>, changeScreen: (Int) -> Unit, function: (Product) 
                             Column(Modifier.Companion.fillMaxWidth()) {
                                 Text("Вся сумма")
                                 summary = 0
-                                cart.forEach { summary += it.count.value * it.product.price }
+                                cart.forEach { summary += it.count.value * it.productData.price }
                                 Text("$summary")
 
                             }
                             Button(
                                 modifier = Modifier.Companion.fillMaxWidth(),
-                                onClick = { cart.forEach { function(it.product) } }) { Text("Оформить заказ") }
+                                onClick = { cart.forEach { function(it.productData) } }) { Text("Оформить заказ") }
 
                         }
                     }
                 }
-            }
         }
     }
 }

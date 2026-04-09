@@ -10,6 +10,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.praya1.screen.CartScreen
+import com.example.praya1.data.CartData
+import com.example.praya1.screen.DetailsScreen
+import com.example.praya1.screen.CatalogScreen
+import com.example.praya1.data.ProductData
+import com.example.praya1.screen.ProfileScreen
+import com.example.praya1.screen.RegistrationScreen
+import com.example.praya1.screen.SingInScreen
 import com.example.praya1.ui.theme.PrayA1Theme
 
 
@@ -24,20 +32,20 @@ class MainActivity : ComponentActivity() {
             PrayA1Theme {
                 var screen by remember { mutableIntStateOf(1) }
                 var account by remember { mutableStateOf<Account?>(null) }
-                val products by remember {
+                val productData by remember {
                     mutableStateOf(
-                        listOf<Product>(
-                            Product(
+                        listOf<ProductData>(
+                            ProductData(
                                 listOf(R.drawable.ic_launcher_background),
                                 name = "1",
                                 desc = "",
                                 1000
-                            ), Product(
+                            ), ProductData(
                                 listOf(R.drawable.ic_launcher_background),
                                 name = "2",
                                 desc = "",
                                 1000
-                            ), Product(
+                            ), ProductData(
                                 listOf(R.drawable.ic_launcher_background),
                                 name = "3",
                                 desc = "",
@@ -46,10 +54,10 @@ class MainActivity : ComponentActivity() {
                         )
                     )
                 }
-                var cart by remember { mutableStateOf(listOf<CartItem>()) }
+                var cart by remember { mutableStateOf(listOf<CartData>()) }
                 var arg by remember {
                     mutableStateOf(
-                        Product(
+                        ProductData(
                             listOf(R.drawable.ic_launcher_background),
                             name = "3",
                             desc = "",
@@ -60,36 +68,37 @@ class MainActivity : ComponentActivity() {
 
                 fun ChangeScreen(): (Int) -> Unit = { screenId: Int -> screen = screenId }
                 fun SaveAccount(): (Account) -> Unit = { newAccount -> account = newAccount }
+
                 when (screen) {
                     0 -> {
-                        Registration(ChangeScreen(), SaveAccount())
+                        RegistrationScreen(ChangeScreen(), SaveAccount())
                     }
 
                     1 -> {
-                        SingIn(ChangeScreen(), SaveAccount())
+                        SingInScreen(ChangeScreen(), SaveAccount())
                     }
 
                     2 -> {
-                        Catalog(ChangeScreen(), products, { sel: Product -> arg = sel })
+                        CatalogScreen(ChangeScreen(), productData, { sel: ProductData -> arg = sel })
                     }
 
                     3 -> {
-                        Details(ChangeScreen(), arg, { product: Product ->
-                            cart += CartItem(
-                                product, mutableIntStateOf(1)
+                        DetailsScreen(ChangeScreen(), arg, { productData: ProductData ->
+                            cart += CartData(
+                                productData, mutableIntStateOf(1)
                             )
-                        },cart)
+                        }, cart)
                     }
 
                     4 -> {
-                        Cart(
-                            cart, ChangeScreen(), { rmProd: Product ->
-                                cart = cart.filter { it.product.name != rmProd.name }
+                        CartScreen(
+                            cart, ChangeScreen(), { rmProd: ProductData ->
+                                cart = cart.filter { it.productData.name != rmProd.name }
                             })
                     }
 
                     5 -> {
-                        Profile(account!!, ChangeScreen(), { account = null })
+                        ProfileScreen(account!!, ChangeScreen(), { account = null })
                     }
 
                 }
