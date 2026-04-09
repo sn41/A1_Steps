@@ -21,12 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.example.praya1.Account
+import com.example.praya1.data.Account
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SingInScreen(
-    changeScreen: (Int) -> Unit, saveAccount: (Account) -> Unit
+    model: MainViewModel
 ) {
     Scaffold(
 
@@ -60,19 +62,19 @@ fun SingInScreen(
                         emailState.text.toString()
                     ).matches()
                 ) {
-                    saveAccount(
+                    model.saveAccount(
                         Account(
                             name = loginState.text.toString(),
                             email = emailState.text.toString(),
                             password = password
                         )
                     )
-                    changeScreen(2)
+                    model.navigateTo(Screens.Catalog)
                 }
             }) {
                 Text("Войти")
             }
-            Button(onClick = { changeScreen(0) }) {
+            Button(onClick = { model.navigateTo(Screens.Registration) }) {
                 Text("зарегистрироваться")
             }
         }

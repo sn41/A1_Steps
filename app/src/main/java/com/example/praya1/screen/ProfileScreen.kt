@@ -15,16 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.example.praya1.Account
 import com.example.praya1.R
 import com.example.praya1.components.BottomBar
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun ProfileScreen(account: Account, changeScreen: (Int) -> Unit, function: () -> Unit) {
+fun ProfileScreen(model: MainViewModel) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Профиль") }) },
-        bottomBar = { BottomBar(changeScreen) }) {
+        bottomBar = { BottomBar({ model.navigateTo(it)}) }) {
         Surface(
             modifier = Modifier.Companion
                 .fillMaxSize()
@@ -36,11 +37,11 @@ fun ProfileScreen(account: Account, changeScreen: (Int) -> Unit, function: () ->
                     contentDescription = null,
                     modifier = Modifier.Companion.fillMaxWidth()
                 )
-                Text(account.name)
-                Text(account.email)
+                Text(model.account?.name ?: "")
+                Text(model.account?.email ?: "")
                 TextButton(onClick = {
-                    function()
-                    changeScreen(1)
+                    model.resetAccount()
+                    model.navigateTo(Screens.SingIn)
                 }) { Text("Выйти") }
             }
         }

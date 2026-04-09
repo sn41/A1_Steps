@@ -24,13 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.praya1.components.BottomBar
-import com.example.praya1.data.ProductData
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogScreen(
-    changeScreen: (Int) -> Unit, productData: List<ProductData>, function2: (ProductData) -> Unit
-) {
+fun CatalogScreen(model: MainViewModel) {
     var searchState = rememberTextFieldState()
     Scaffold(topBar = {
         TopAppBar(title = {
@@ -41,7 +40,7 @@ fun CatalogScreen(
             )
         })
     }, bottomBar = {
-        BottomBar(changeScreen)
+        BottomBar({model.navigateTo(it)})
     }
 
     ) { it ->
@@ -50,7 +49,7 @@ fun CatalogScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            items(productData.filter {
+            items(model.productData.filter {
                 it.name.contains(
                     searchState.text.toString(), ignoreCase = true
                 )
@@ -61,8 +60,8 @@ fun CatalogScreen(
                         Modifier.Companion
                             .fillMaxSize()
                             .clickable(onClick = {
-                                function2(it)
-                                changeScreen(3)
+                                model.selectnew(it)
+                                model.navigateTo(Screens.Details)
                             })
                     ) {
                         HorizontalPager(

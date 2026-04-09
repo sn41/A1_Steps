@@ -12,32 +12,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.example.praya1.Account
+import androidx.compose.ui.unit.dp
+import com.example.praya1.data.Account
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
-    changeScreen: (Int) -> Unit, saveAccount: (Account) -> Unit
+    model: MainViewModel
 ) {
     var emailState = rememberTextFieldState()
     var loginState = rememberTextFieldState()
     var password by remember { mutableStateOf("") }
     var isHidden by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("регистрация") },
-                actions = { Button(onClick = { changeScreen(1) }) { Text("<") } })
+                actions = { Button(onClick = { model.navigateTo(Screens.Registration) }) { Text("<") } })
         }) {
         Column(
             horizontalAlignment = Alignment.Companion.CenterHorizontally,
-            modifier = Modifier.Companion.fillMaxSize().padding(it)
+            modifier = Modifier.Companion
+                .fillMaxSize()
+                .padding(it).padding(horizontal = 16.dp)
         ) {
             OutlinedTextField(state = emailState, label = { Text("Почта") }, supportingText = {
                 if (emailState.text.toString().isNotBlank() && !Patterns.EMAIL_ADDRESS.matcher(
@@ -45,6 +53,7 @@ fun RegistrationScreen(
                     ).matches()
                 ) Text("Введите корректный адрес")
             })
+
             OutlinedTextField(state = loginState, label = { Text("Логин") }, supportingText = {
                 if (!loginState.text.toString().isNotBlank()) Text("Заполните все поля ")
             })
@@ -63,14 +72,14 @@ fun RegistrationScreen(
                         .isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(emailState.text.toString())
                         .matches()
                 ) {
-                    saveAccount(
+                    model.saveAccount(
                         Account(
                             name = loginState.text.toString(),
                             email = emailState.text.toString(),
                             password = password
                         )
                     )
-                    changeScreen(2)
+                    model.navigateTo(Screens.Catalog)
                 }
 
 

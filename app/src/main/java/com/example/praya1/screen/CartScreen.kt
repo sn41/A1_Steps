@@ -25,28 +25,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.praya1.components.BottomBar
-import com.example.praya1.data.CartData
 import com.example.praya1.components.CartRow
-import com.example.praya1.data.ProductData
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(cart: List<CartData>, changeScreen: (Int) -> Unit, function: (ProductData) -> Unit) {
+fun CartScreen(model: MainViewModel) {
     Scaffold(topBar = {
         TopAppBar(title = { Text("Корзина") }, actions = {
-            if (cart.isNotEmpty()) Button(onClick = {
-                cart.forEach {
-                    function(it.productData)
+            if (model.cart.isNotEmpty()) Button(onClick = {
+                model.cart.forEach {
+                    model.deleteCartItem()(it.productData)
                 }
             }) { Text("X") }
         })
-    }, bottomBar = { BottomBar(changeScreen) }) {
+    }, bottomBar = { BottomBar(onNavigate = { model.navigateTo(it)}) }) {
         Surface(
             modifier = Modifier.Companion
                 .fillMaxSize()
                 .padding(it)
         ) {
-            if (cart.isEmpty())
+            if (model.cart.isEmpty())
                 Column(
                     modifier = Modifier.Companion.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -54,7 +54,7 @@ fun CartScreen(cart: List<CartData>, changeScreen: (Int) -> Unit, function: (Pro
                 ) {
                     Text("В вашей корзине пока пусто")
                     Text("Добавльте товары из каталога")
-                    Button(onClick = { changeScreen(2) }) {
+                    Button(onClick = { model.navigateTo(Screens.Catalog) }) {
                         Text("Перейти к каталогу")
                     }
                 } else
@@ -63,28 +63,34 @@ fun CartScreen(cart: List<CartData>, changeScreen: (Int) -> Unit, function: (Pro
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
                     LazyColumn(Modifier.Companion.fillMaxWidth()) {
-                        itemsIndexed(cart) { index, item ->
+                        itemsIndexed(model.cart) { index, item ->
                             Card {
-                                CartRow(item, index, function)
+                                CartRow(item, index, model.deleteCartItem())
                             }
                         }
                     }
                     Card {
                         Row(
-                            Modifier.Companion.fillMaxWidth().height(70.dp),
+                            Modifier.Companion
+                                .fillMaxWidth()
+                                .height(70.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             var summary by remember { mutableIntStateOf(0) }
                             Column(Modifier.Companion.fillMaxWidth()) {
                                 Text("Вся сумма")
                                 summary = 0
-                                cart.forEach { summary += it.count.value * it.productData.price }
+                                model.cart.forEach { summary += it.count.value * it.productData.price }
                                 Text("$summary")
 
                             }
                             Button(
                                 modifier = Modifier.Companion.fillMaxWidth(),
-                                onClick = { cart.forEach { function(it.productData) } }) { Text("Оформить заказ") }
+                                onClick = { model.cart.forEach { model.deleteCartItem()(it.productData) } }) {
+                                Text(
+                                    "Оформить заказ"
+                                )
+                            }
 
                         }
                     }

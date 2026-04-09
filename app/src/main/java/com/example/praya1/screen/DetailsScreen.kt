@@ -18,30 +18,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.praya1.data.CartData
-import com.example.praya1.data.ProductData
+import com.example.praya1.models.MainViewModel
+import com.example.praya1.models.Screens
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
- fun DetailsScreen(
-    changeScreen: (Int) -> Unit, arg: ProductData, function2: (ProductData) -> Unit, cart: List<CartData>
-) {
+ fun DetailsScreen(model: MainViewModel) {
     Scaffold(topBar = {
         TopAppBar(title = {
-            Button(onClick = { changeScreen(2) }) {
+            Button(onClick = { model.navigateTo(Screens.Catalog) }) {
                 Text("<")
             }
         })
     }, bottomBar = {
         BottomAppBar {
-            val isIn = cart.find { it.productData.name == arg.name } != null
+
             Button(modifier = Modifier.Companion.fillMaxWidth(), onClick = {
-                if (!isIn) {
-                    function2(arg)
+                if (model.cartNotContainItem()) {
+                    model.addToCart()
                 }
-                changeScreen(2)
+                model.navigateTo(Screens.Catalog)
             }) {
-                if (isIn) Text("Уже в корзине") else {
+                if (model.cartNotContainItem()) Text("Уже в корзине") else {
                     Text("Добавить в корзину")
 
                 }
@@ -53,20 +51,20 @@ import com.example.praya1.data.ProductData
                 .fillMaxSize()
                 .padding(it)
         ) {
-            val pagestate = rememberPagerState { arg.images.size }
+            val pagestate = rememberPagerState { model.selectedProduct!!.images.size }
             HorizontalPager(
                 pagestate
 
             ) { page ->
                 Image(
-                    painter = painterResource(arg.images[page]),
+                    painter = painterResource(model.selectedProduct!!.images[page]),
                     contentDescription = null,
                     modifier = Modifier.Companion.height(200.dp)
                 )
             }
-            Text(arg.name)
-            Text(arg.price.toString())
-            Text(arg.desc)
+            Text(model.selectedProduct!!.name)
+            Text(model.selectedProduct!!.price.toString())
+            Text(model.selectedProduct!!.desc)
         }
     }
 }
